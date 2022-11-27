@@ -11,7 +11,7 @@ from skimage.feature import hog, local_binary_pattern, ORB
 cv2_base_dir = os.path.dirname(os.path.abspath(cv.__file__))
 haar_model = os.path.join(
     cv2_base_dir, 'data/haarcascade_frontalface_default.xml')
-svm = pickle.load(open('model14.sav', 'rb'))
+svm = pickle.load(open('model16.sav', 'rb'))
 haar_classifier = cv.CascadeClassifier(haar_model)
 names = {0: 'Mask', 1: 'Without Mask'}
 
@@ -66,10 +66,9 @@ if capture.isOpened():
                     face, footprint=disk(2), s0=50, s1=50
                 )
                 face = kmeans(face)
-                hist = describe(face)
                 fd = hog(face, orientations=9, pixels_per_cell=(8, 8), 
                     cells_per_block=(2, 2))
-                features = np.concatenate((fd,hist), axis =0)       
+                features = fd
                 features = features.reshape(1,-1)
                 pred = svm.predict(features)[0]
                 n = names[int(pred)]
