@@ -46,10 +46,10 @@ def describe(image, eps=1e-7):
 def gabor_filter(img):
     return gabor(img, frequency=0.8)[0]
 
-capture = cv.VideoCapture(0)
+capture = cv.VideoCapture(1)
 
 if not capture.isOpened():
-    capture.open(0)
+    capture.open(1)
 
 
 if capture.isOpened():
@@ -57,7 +57,7 @@ if capture.isOpened():
         flag, img = capture.read()
         if flag:
             img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-            faces = haar_classifier.detectMultiScale(img, minNeighbors = 5, minSize = (100,100))
+            faces = haar_classifier.detectMultiScale(img, minNeighbors = 5, minSize = (250,250))
             for x, y, w, h in faces:
                 cv.rectangle(img, (x,y), (x+w, y+h), (122,50,200),2)
                 face = img[y:y+h, x:x+w]
@@ -73,6 +73,7 @@ if capture.isOpened():
                 features = features.reshape(1,-1)
                 pred = svm.predict(features)[0]
                 n = names[int(pred)]
+                cv.putText(img, n, (x+50,y), cv.FONT_HERSHEY_SIMPLEX ,1, (255,255,0) ,2, cv.LINE_AA)
                 print(n)
             cv.imshow('test',img)
 
